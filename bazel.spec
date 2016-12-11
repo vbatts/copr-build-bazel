@@ -26,6 +26,7 @@ export CC=/usr/bin/gcc
 export CXX=/usr/bin/g++
 ./compile.sh
 ./output/bazel build //scripts:bazel-complete.bash
+./output/bazel shutdown
 
 %install
 mkdir -p %{buildroot}/%{_bindir}
