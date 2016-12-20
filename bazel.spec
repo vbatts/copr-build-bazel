@@ -1,5 +1,5 @@
 Name:           bazel
-Version:        0.3.2
+Version:        0.4.2
 Release:        0%{?dist}
 Summary:        Correct, reproducible, and fast builds for everyone.
 License:        Apache License 2.0
@@ -44,5 +44,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 21 2016 Byoungchan Lee <byoungchan.lee@gmx.com> 0.4.2-0
+- update from upstream release
+
 * Sun Dec 11 2016 Byoungchan Lee <byoungchan.lee@gmx.com> 0.3.2-0
 - initial spec file 
