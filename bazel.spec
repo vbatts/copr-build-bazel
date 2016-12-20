@@ -6,6 +6,8 @@ License:        Apache License 2.0
 URL:            http://bazel.io/
 Source0:        https://github.com/bazelbuild/bazel/releases/download/%{name}/%{name}-%{version}-dist.zip
 
+BuildRequires:  java-1.8.0-openjdk-devel
+BuildRequires:  zlib-devel
 BuildRequires:  pkgconfig(bash-completion)
 Requires:       java-1.8.0-openjdk-devel
 
