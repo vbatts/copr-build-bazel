@@ -4,10 +4,8 @@ Release:        0%{?dist}
 Summary:        Correct, reproducible, and fast builds for everyone.
 License:        Apache License 2.0
 URL:            http://bazel.io/
-Source0:        https://github.com/bazelbuild/bazel/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
+Source0:        https://github.com/bazelbuild/bazel/releases/download/%{name}/%{name}-%{version}-dist.zip
 
-BuildRequires:  java-1.8.0-openjdk-devel
-BuildRequires:  zlib-devel
 BuildRequires:  pkgconfig(bash-completion)
 Requires:       java-1.8.0-openjdk-devel
 
@@ -19,11 +17,11 @@ Requires:       java-1.8.0-openjdk-devel
 Correct, reproducible, and fast builds for everyone.
 
 %prep
-%setup -q
+%setup -q -c -n %{name}-%{version}
 
 %build
-export CC=/usr/bin/gcc
-export CXX=/usr/bin/g++
+CC=gcc
+CXX=g++
 ./compile.sh
 ./output/bazel build //scripts:bazel-complete.bash
 ./output/bazel shutdown
