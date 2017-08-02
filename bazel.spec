@@ -1,5 +1,5 @@
 Name:           bazel
-Version:        0.4.2
+Version:        0.5.3
 Release:        0%{?dist}
 Summary:        Correct, reproducible, and fast builds for everyone.
 License:        Apache License 2.0
@@ -44,6 +44,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Aug 02 2017 Vincent Batts <vbatts@fedoraproject.org> 0.5.3-0
+- update from upstream
+
 * Wed Dec 21 2016 Byoungchan Lee <byoungchan.lee@gmx.com> 0.4.2-0
 - update from upstream release
 
