@@ -13,6 +13,7 @@ BuildRequires:  java-1.8.0-openjdk-devel
 BuildRequires:  zlib-devel
 BuildRequires:  pkgconfig(bash-completion)
 BuildRequires:  python
+BuildRequires:  gcc-c++
 Requires:       java-1.8.0-openjdk-devel
 
 %define bashcompdir %(pkg-config --variable=completionsdir bash-completion 2>/dev/null)
@@ -48,6 +49,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Aug 25 2017 Vincent Batts <vbatts@fedoraproject.org> 0.5.4-1
+- adding missing builddeps
+
 * Fri Aug 25 2017 Vincent Batts <vbatts@fedoraproject.org> 0.5.4-0
 - update from upstream
 - and spec cleanup for webhook builds
