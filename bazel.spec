@@ -1,10 +1,13 @@
+# they warn against doing this ... :-\
+%define _disable_source_fetch 0
+
 Name:           bazel
-Version:        0.5.3
+Version:        0.5.4
 Release:        0%{?dist}
 Summary:        Correct, reproducible, and fast builds for everyone.
 License:        Apache License 2.0
 URL:            http://bazel.io/
-Source0:        https://github.com/bazelbuild/bazel/releases/download/%{name}/%{name}-%{version}-dist.zip
+Source0:        https://github.com/bazelbuild/bazel/releases/download/%{version}/%{name}-%{version}-dist.zip
 
 BuildRequires:  java-1.8.0-openjdk-devel
 BuildRequires:  zlib-devel
@@ -44,6 +47,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Aug 25 2017 Vincent Batts <vbatts@fedoraproject.org> 0.5.4-0
+- update from upstream
+- and spec cleanup for webhook builds
+
 * Wed Aug 02 2017 Vincent Batts <vbatts@fedoraproject.org> 0.5.3-0
 - update from upstream
 
