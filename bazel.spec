@@ -2,7 +2,7 @@
 %define _disable_source_fetch 0
 
 Name:           bazel
-Version:        0.5.4
+Version:        0.6.0
 Release:        1%{?dist}
 Summary:        Correct, reproducible, and fast builds for everyone.
 License:        Apache License 2.0
@@ -49,6 +49,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Sep 28 2017 Vincent Batts <vbatts@fedoraproject.org> 0.6.0-1
+- update to 0.6.0
+
 * Fri Aug 25 2017 Vincent Batts <vbatts@fedoraproject.org> 0.5.4-1
 - adding missing builddeps
 
