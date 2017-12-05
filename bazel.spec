@@ -2,7 +2,7 @@
 %define _disable_source_fetch 0
 
 Name:           bazel
-Version:        0.7.0
+Version:        0.8.0
 Release:        1%{?dist}
 Summary:        Correct, reproducible, and fast builds for everyone.
 License:        Apache License 2.0
@@ -37,7 +37,7 @@ CXX=g++
 mkdir -p %{buildroot}/%{_bindir}
 mkdir -p %{buildroot}/%{bashcompdir}
 cp output/bazel %{buildroot}/%{_bindir}
-cp bazel-out/local-fastbuild/bin/scripts/bazel-complete.bash %{buildroot}/%{bashcompdir}/bazel
+cp ./bazel-bin/scripts/bazel-complete.bash %{buildroot}/%{bashcompdir}/bazel
 
 %clean
 rm -rf %{buildroot}
@@ -49,6 +49,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Nov 30 2017 Vincent Batts <vbatts@fedoraproject.org> 0.8.0-1
+- update to 0.8.0
+
 * Wed Oct 18 2017 Vincent Batts <vbatts@fedoraproject.org> 0.7.0-1
 - update to 0.7.0
 
