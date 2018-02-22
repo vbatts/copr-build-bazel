@@ -38,6 +38,9 @@ $(NVR).src.rpm: $(specname) $(wildcard *.diff)
 builddep: $(NVR).src.rpm
 	dnf builddep -y $<
 
+rebuild: builddep
+	rpmbuild --rebuild $(NVR).src.rpm
+
 clean:
 	rm -rf *~ *.rpm noarch
 
