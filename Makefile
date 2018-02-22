@@ -5,13 +5,14 @@ pwd := $(shell pwd)
 NAME ?= $(shell rpmspec -q --qf "%{name}" $(specname))
 VERSION ?= $(shell rpmspec -q --qf "%{version}" $(specname))
 RELEASE ?= $(shell rpmspec -q --qf "%{release}" $(specname))
+NVR := $(NAME)-$(VERSION)-$(RELEASE)
 
 default: srpm
 
 all: rpm srpm
 
 name:
-	@echo $(NAME)-$(VERSION)-$(RELEASE)
+	@echo $(NVR)
 
 rpm:
 	rpmbuild \
@@ -22,7 +23,9 @@ rpm:
                 --define '_rpmdir $(pwd)' \
                 -bb ./$(specname)
 
-srpm: $(specname) $(wildcard *.diff)
+srpm: $(NVR).src.rpm
+
+$(NVR).src.rpm: $(specname) $(wildcard *.diff)
 	rpmbuild \
                 --define '_sourcedir $(pwd)' \
                 --define '_specdir $(pwd)' \
@@ -31,6 +34,9 @@ srpm: $(specname) $(wildcard *.diff)
                 --define '_rpmdir $(pwd)' \
                 --nodeps \
                 -bs ./$(specname)
+
+builddep: $(NVR).src.rpm
+	dnf builddep -y $<
 
 clean:
 	rm -rf *~ *.rpm noarch
