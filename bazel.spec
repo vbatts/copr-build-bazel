@@ -3,7 +3,7 @@
 
 Name:           bazel
 Version:        0.14.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Correct, reproducible, and fast builds for everyone.
 License:        Apache License 2.0
 URL:            http://bazel.io/
@@ -17,7 +17,7 @@ BuildRequires:  gcc-c++
 Requires:       java-1.8.0-openjdk-devel
 
 %define bashcompdir %(pkg-config --variable=completionsdir bash-completion 2>/dev/null)
-%define debug_package %{nil}
+%global debug_package %{nil}
 %define __os_install_post %{nil}
 
 %description
@@ -34,13 +34,14 @@ CXX=g++
 ./output/bazel shutdown
 
 %install
-mkdir -p %{buildroot}/%{_bindir}
-mkdir -p %{buildroot}/%{bashcompdir}
-cp output/bazel %{buildroot}/%{_bindir}
-cp ./bazel-bin/scripts/bazel-complete.bash %{buildroot}/%{bashcompdir}/bazel
+%{__mkdir_p} %{buildroot}/%{_bindir}
+%{__mkdir_p} %{buildroot}/%{bashcompdir}
+%{__strip} --strip-unneeded output/bazel
+%{__cp} output/bazel %{buildroot}/%{_bindir}
+%{__cp} ./bazel-bin/scripts/bazel-complete.bash %{buildroot}/%{bashcompdir}/bazel
 
 %clean
-rm -rf %{buildroot}
+%{__rm} -rf %{buildroot}
 
 %files
 %defattr(-,root,root)
@@ -49,6 +50,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jun 22 2018 Vincent Batts <vbatts@fedoraproject.org> 0.14.1-2
+- stripping the binary. 100.5Mb -> 1.5Mb. Could not isolate out the debuginfo
+  into its own linked debuginfo package. Not sture whats going on there. But
+  for now just stripping unneeded.
+
 * Fri Jun 08 2018 Vincent Batts <vbatts@fedoraproject.org> 0.14.1-1
 - update to 0.14.1
 
