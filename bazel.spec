@@ -3,7 +3,7 @@
 
 Name:           bazel
 Version:        0.15.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Correct, reproducible, and fast builds for everyone.
 License:        Apache License 2.0
 URL:            http://bazel.io/
@@ -36,7 +36,6 @@ CXX=g++
 %install
 %{__mkdir_p} %{buildroot}/%{_bindir}
 %{__mkdir_p} %{buildroot}/%{bashcompdir}
-%{__strip} --strip-unneeded output/bazel
 %{__cp} output/bazel %{buildroot}/%{_bindir}
 %{__cp} ./bazel-bin/scripts/bazel-complete.bash %{buildroot}/%{bashcompdir}/bazel
 
@@ -50,6 +49,9 @@ CXX=g++
 
 
 %changelog
+* Wed Jun 27 2018 Vincent Batts <vbatts@fedoraproject.org> 0.15.0-2
+- add back the symbols (don't strip) as there is a binary embedded in the binary! :-O
+
 * Tue Jun 26 2018 Vincent Batts <vbatts@fedoraproject.org> 0.15.0-1
 - update to 0.15.0
 
