@@ -1,11 +1,10 @@
-
-pkgname := bazel
-specname ?= $(pkgname).spec
-pwd := $(shell pwd)
-NAME ?= $(shell rpmspec -q --qf "%{name}" $(specname))
-VERSION ?= $(shell rpmspec -q --qf "%{version}" $(specname))
-RELEASE ?= $(shell rpmspec -q --qf "%{release}" $(specname))
-NVR := $(NAME)-$(VERSION)-$(RELEASE)
+pkgname		:= bazel
+specname	?= $(pkgname).spec
+pwd		:= $(shell pwd)
+NAME		?= $(shell rpmspec -q --qf "%{name}" $(specname))
+VERSION		?= $(shell rpmspec -q --qf "%{version}" $(specname))
+RELEASE		?= $(shell rpmspec -q --qf "%{release}" $(specname))
+NVR		:= $(NAME)-$(VERSION)-$(RELEASE)
 
 default: srpm
 
