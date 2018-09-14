@@ -2,7 +2,7 @@
 %define _disable_source_fetch 0
 
 Name:           bazel
-Version:        0.16.1
+Version:        0.17.1
 Release:        1%{?dist}
 Summary:        Correct, reproducible, and fast builds for everyone.
 License:        Apache License 2.0
@@ -49,6 +49,9 @@ CXX=g++
 
 
 %changelog
+* Fri Sep 14 2018 Vincent Batts <vbatts@fedoraproject.org> 0.17.1-1
+- update to 0.17.1
+
 * Mon Aug 13 2018 Vincent Batts <vbatts@fedoraproject.org> 0.16.1-1
 - update to 0.16.1
 
