@@ -3,11 +3,12 @@
 
 Name:           bazel
 Version:        0.19.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Correct, reproducible, and fast builds for everyone.
 License:        Apache License 2.0
 URL:            http://bazel.io/
 Source0:        https://github.com/bazelbuild/bazel/releases/download/%{version}/%{name}-%{version}-dist.zip
+Patch0:         file:///root/rpm-jdk8.patch
 
 BuildRequires:  java-1.8.0-openjdk-devel
 BuildRequires:  zlib-devel
@@ -25,6 +26,7 @@ Correct, reproducible, and fast builds for everyone.
 
 %prep
 %setup -q -c -n %{name}-%{version}
+%patch0 -p0
 
 %build
 CC=gcc
@@ -49,6 +51,12 @@ CXX=g++
 
 
 %changelog
+* Tue Oct 30 2018 Vincent Batts <vbatts@fedoraproject.org> 0.19.0-2
+- addressing https://github.com/bazelbuild/bazel/issues/6550
+
+* Mon Oct 29 2018 Vincent Batts <vbatts@fedoraproject.org> 0.19.0-1
+- update to 0.19.0
+
 * Mon Oct 15 2018 Vincent Batts <vbatts@fedoraproject.org> 0.18.0-1
 - update to 0.18.0
 
