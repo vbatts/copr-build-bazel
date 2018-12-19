@@ -8,13 +8,13 @@ Summary:        Correct, reproducible, and fast builds for everyone.
 License:        Apache License 2.0
 URL:            http://bazel.io/
 Source0:        https://github.com/bazelbuild/bazel/releases/download/%{version}/%{name}-%{version}-dist.zip
-Patch0:         file:///root/rpm-jdk8.patch
 
 BuildRequires:  java-1.8.0-openjdk-devel
 BuildRequires:  zlib-devel
 BuildRequires:  pkgconfig(bash-completion)
 BuildRequires:  python
 BuildRequires:  gcc-c++
+BuildRequires:  which
 Requires:       java-1.8.0-openjdk-devel
 
 %define bashcompdir %(pkg-config --variable=completionsdir bash-completion 2>/dev/null)
@@ -26,7 +26,6 @@ Correct, reproducible, and fast builds for everyone.
 
 %prep
 %setup -q -c -n %{name}-%{version}
-%patch0 -p0
 
 %build
 CC=gcc
