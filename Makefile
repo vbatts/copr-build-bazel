@@ -25,6 +25,14 @@ rpm:
 
 srpm: $(NVR).src.rpm
 
+push: $(NVR).src.rpm
+	@scp $(NVR).src.rpm fedorapeople.org:public_html/ && \
+	echo "pushed to https://$(USER).fedorapeople.org/$(NVR).src.rpm"
+
+# https://developer.fedoraproject.org/deployment/copr/copr-cli.html
+copr: $(NVR).src.rpm
+	copr-cli build bazel $(NVR).src.rpm
+
 $(NVR).src.rpm: $(specname) $(wildcard *.diff)
 	rpmbuild \
                 --define '_sourcedir $(pwd)' \
