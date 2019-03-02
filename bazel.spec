@@ -37,7 +37,8 @@ CXX=g++
 %install
 %{__mkdir_p} %{buildroot}/%{_bindir}
 %{__mkdir_p} %{buildroot}/%{bashcompdir}
-%{__cp} output/bazel %{buildroot}/%{_bindir}
+%{__cp} output/bazel %{buildroot}/%{_bindir}/bazel-real
+%{__cp} ./scripts/packages/bazel.sh %{buildroot}/%{_bindir}/bazel
 %{__cp} ./bazel-bin/scripts/bazel-complete.bash %{buildroot}/%{bashcompdir}/bazel
 
 %clean
@@ -46,10 +47,15 @@ CXX=g++
 %files
 %defattr(-,root,root)
 %attr(0755,root,root) %{_bindir}/bazel
+%attr(0755,root,root) %{_bindir}/bazel-real
 %attr(0755,root,root) %{bashcompdir}/bazel
 
 
 %changelog
+* Fri Mar 01 2019 Kelvin Lu <kelvinlu@squareup.com> 0.23.0-2
+- rename the real bazel binary as `bazel-real` and install the bash wrapper
+  (`scripts/packages/bazel.sh`) in its place
+
 * Tue Feb 26 2019 Vincent Batts <vbatts@fedoraproject.org> 0.23.0-1
 - update to 0.23.0
 
@@ -150,4 +156,4 @@ CXX=g++
 - update from upstream release
 
 * Sun Dec 11 2016 Byoungchan Lee <byoungchan.lee@gmx.com> 0.3.2-0
-- initial spec file 
+- initial spec file
