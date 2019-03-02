@@ -4,7 +4,7 @@
 
 Name:           bazel
 Version:        0.27.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Correct, reproducible, and fast builds for everyone.
 License:        Apache License 2.0
 URL:            http://bazel.io/
@@ -70,7 +70,8 @@ export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --host_javabase=@local_jdk//:jdk --
 %install
 %{__mkdir_p} %{buildroot}/%{_bindir}
 %{__mkdir_p} %{buildroot}/%{bashcompdir}
-%{__cp} output/bazel %{buildroot}/%{_bindir}
+%{__cp} output/bazel %{buildroot}/%{_bindir}/bazel-real
+%{__cp} ./scripts/packages/bazel.sh %{buildroot}/%{_bindir}/bazel
 %{__cp} ./bazel-bin/scripts/bazel-complete.bash %{buildroot}/%{bashcompdir}/bazel
 
 %clean
@@ -79,10 +80,15 @@ export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --host_javabase=@local_jdk//:jdk --
 %files
 %defattr(-,root,root)
 %attr(0755,root,root) %{_bindir}/bazel
+%attr(0755,root,root) %{_bindir}/bazel-real
 %attr(0755,root,root) %{bashcompdir}/bazel
 
 
 %changelog
+* Thu Jun 20 2019 Kelvin Lu <kelvinlu@squareup.com> 0.27.0-6
+- rename the real bazel binary as `bazel-real` and install the bash wrapper
+  (`scripts/packages/bazel.sh`) in its place
+
 * Thu Jun 20 2019 Vincent Batts <vbatts@fedoraproject.org> 0.27.0-5
 - fixing the version output
 
@@ -236,4 +242,4 @@ export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --host_javabase=@local_jdk//:jdk --
 - update from upstream release
 
 * Sun Dec 11 2016 Byoungchan Lee <byoungchan.lee@gmx.com> 0.3.2-0
-- initial spec file 
+- initial spec file
