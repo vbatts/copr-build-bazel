@@ -4,19 +4,23 @@
 
 Name:           bazel
 Version:        0.25.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Correct, reproducible, and fast builds for everyone.
 License:        Apache License 2.0
 URL:            http://bazel.io/
 Source0:        https://github.com/bazelbuild/bazel/releases/download/%{version}/%{name}-%{version}-dist.zip
 
-BuildRequires:  java-1.8.0-openjdk-devel
+BuildRequires:  java-11-openjdk-devel
 BuildRequires:  zlib-devel
 BuildRequires:  pkgconfig(bash-completion)
+%if 0%{?rhel} > 7
+BuildRequires:  python3
+%else
 BuildRequires:  python
+%endif
 BuildRequires:  gcc-c++
 BuildRequires:  which
-Requires:       java-1.8.0-openjdk-devel
+Requires:       java-11-openjdk-devel
 
 %define bashcompdir %(pkg-config --variable=completionsdir bash-completion 2>/dev/null)
 %global debug_package %{nil}
@@ -29,10 +33,17 @@ Correct, reproducible, and fast builds for everyone.
 %setup -q -c -n %{name}-%{version}
 
 %build
-CC=gcc
-CXX=g++
+%if 0%{?rhel} > 7
+dir=$(mktemp -d)
+%{__ln_s} $(which python3) ${dir}/python
+export PATH=${dir}:$PATH
+%else
+%endif
+export CC=gcc
+export CXX=g++
+export EXTRA_BAZEL_ARGS="--host_javabase=@local_jdk//:jdk"
 ./compile.sh
-./output/bazel build //scripts:bazel-complete.bash
+./output/bazel build ${EXTRA_BAZEL_ARGS} //scripts:bazel-complete.bash
 ./output/bazel shutdown
 
 %install
@@ -51,6 +62,10 @@ CXX=g++
 
 
 %changelog
+* Wed May 08 2019 Vincent Batts <vbatts@fedoraproject.org> 0.25.0-2
+- actually use host jdk
+- bazel didn't fully compile with openjdk 1.8.0, updated to 11
+
 * Thu May 02 2019 Vincent Batts <vbatts@fedoraproject.org> 0.25.0-1
 - update to 0.25.0
 - https://github.com/bazelbuild/bazel/releases/tag/0.25.0
