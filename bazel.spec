@@ -3,8 +3,8 @@
 %define _disable_source_fetch 0
 
 Name:           bazel
-Version:        0.25.0
-Release:        3%{?dist}
+Version:        0.25.1
+Release:        1%{?dist}
 Summary:        Correct, reproducible, and fast builds for everyone.
 License:        Apache License 2.0
 URL:            http://bazel.io/
@@ -60,6 +60,9 @@ export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --host_javabase=@local_jdk//:jdk"
 
 
 %changelog
+* Mon May 13 2019 Vincent Batts <vbatts@fedoraproject.org> 0.25.1-1
+- update to 0.25.1
+
 * Mon May 13 2019 Vincent Batts <vbatts@fedoraproject.org> 0.25.0-3
 - less janky use of python3
 
