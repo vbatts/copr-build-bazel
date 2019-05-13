@@ -4,7 +4,7 @@
 
 Name:           bazel
 Version:        0.25.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Correct, reproducible, and fast builds for everyone.
 License:        Apache License 2.0
 URL:            http://bazel.io/
@@ -34,14 +34,12 @@ Correct, reproducible, and fast builds for everyone.
 
 %build
 %if 0%{?rhel} > 7
-dir=$(mktemp -d)
-%{__ln_s} $(which python3) ${dir}/python
-export PATH=${dir}:$PATH
+export EXTRA_BAZEL_ARGS="--python3_path=/usr/bin/python3"
 %else
 %endif
 export CC=gcc
 export CXX=g++
-export EXTRA_BAZEL_ARGS="--host_javabase=@local_jdk//:jdk"
+export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --host_javabase=@local_jdk//:jdk"
 ./compile.sh
 ./output/bazel build ${EXTRA_BAZEL_ARGS} //scripts:bazel-complete.bash
 ./output/bazel shutdown
@@ -62,6 +60,9 @@ export EXTRA_BAZEL_ARGS="--host_javabase=@local_jdk//:jdk"
 
 
 %changelog
+* Mon May 13 2019 Vincent Batts <vbatts@fedoraproject.org> 0.25.0-3
+- less janky use of python3
+
 * Wed May 08 2019 Vincent Batts <vbatts@fedoraproject.org> 0.25.0-2
 - actually use host jdk
 - bazel didn't fully compile with openjdk 1.8.0, updated to 11
