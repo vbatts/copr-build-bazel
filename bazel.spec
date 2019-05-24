@@ -3,7 +3,7 @@
 %define _disable_source_fetch 0
 
 Name:           bazel
-Version:        0.25.2
+Version:        0.25.3
 Release:        1%{?dist}
 Summary:        Correct, reproducible, and fast builds for everyone.
 License:        Apache License 2.0
@@ -39,6 +39,7 @@ export EXTRA_BAZEL_ARGS="--python3_path=/usr/bin/python3"
 %endif
 export CC=gcc
 export CXX=g++
+#export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --host_javabase=@local_jdk//:jdk --host_jvm_args=-Xmx2g --nokeep_state_after_build --notrack_incremental_state --nokeep_state_after_build"
 export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --host_javabase=@local_jdk//:jdk"
 ./compile.sh
 ./output/bazel build ${EXTRA_BAZEL_ARGS} //scripts:bazel-complete.bash
@@ -60,6 +61,9 @@ export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --host_javabase=@local_jdk//:jdk"
 
 
 %changelog
+* Fri May 24 2019 Vincent Batts <vbatts@fedoraproject.org> 0.25.3-1
+- update to 0.25.3
+
 * Mon May 13 2019 Vincent Batts <vbatts@fedoraproject.org> 0.25.2-1
 - update to 0.25.2
 
