@@ -4,7 +4,7 @@
 
 Name:           bazel
 Version:        0.25.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Correct, reproducible, and fast builds for everyone.
 License:        Apache License 2.0
 URL:            http://bazel.io/
@@ -34,13 +34,18 @@ Correct, reproducible, and fast builds for everyone.
 
 %build
 %if 0%{?rhel} > 7
-export EXTRA_BAZEL_ARGS="--python3_path=/usr/bin/python3"
+export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --python3_path=/usr/bin/python3"
 %else
 %endif
+
+%ifarch aarch64
+export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --nokeep_state_after_build --notrack_incremental_state --nokeep_state_after_build"
+%else
+%endif
+
 export CC=gcc
 export CXX=g++
-#export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --host_javabase=@local_jdk//:jdk --host_jvm_args=-Xmx2g --nokeep_state_after_build --notrack_incremental_state --nokeep_state_after_build"
-export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --host_javabase=@local_jdk//:jdk"
+export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --host_javabase=@local_jdk//:jdk --verbose_failures"
 ./compile.sh
 ./output/bazel build ${EXTRA_BAZEL_ARGS} //scripts:bazel-complete.bash
 ./output/bazel shutdown
@@ -61,6 +66,9 @@ export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --host_javabase=@local_jdk//:jdk"
 
 
 %changelog
+* Fri May 24 2019 Vincent Batts <vbatts@fedoraproject.org> 0.25.3-2
+- trying aarch64 specific flags
+
 * Fri May 24 2019 Vincent Batts <vbatts@fedoraproject.org> 0.25.3-1
 - update to 0.25.3
 
