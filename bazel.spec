@@ -3,7 +3,7 @@
 %define _disable_source_fetch 0
 
 Name:           bazel
-Version:        0.25.3
+Version:        0.26.0
 Release:        2%{?dist}
 Summary:        Correct, reproducible, and fast builds for everyone.
 License:        Apache License 2.0
@@ -66,6 +66,9 @@ export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --host_javabase=@local_jdk//:jdk --
 
 
 %changelog
+* Tue Jun 11 2019 Vincent Batts <vbatts@fedoraproject.org> 0.26.0
+- update to 0.26.0
+
 * Fri May 24 2019 Vincent Batts <vbatts@fedoraproject.org> 0.25.3-2
 - trying aarch64 specific flags
 
