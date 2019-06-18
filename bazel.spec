@@ -4,7 +4,7 @@
 
 Name:           bazel
 Version:        0.27.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Correct, reproducible, and fast builds for everyone.
 License:        Apache License 2.0
 URL:            http://bazel.io/
@@ -13,11 +13,15 @@ Source0:        https://github.com/bazelbuild/bazel/releases/download/%{version}
 BuildRequires:  java-11-openjdk-devel
 BuildRequires:  zlib-devel
 BuildRequires:  pkgconfig(bash-completion)
-%if 0%{?rhel} > 6 && 0%{?rhel} < 8
+
+# messy, but `python` needs to exist, although python3 is preferred and somewhat detected
+# https://github.com/bazelbuild/bazel/issues/8665
 BuildRequires:  python
+%if 0%{?rhel} > 6 && 0%{?rhel} < 8
 %else
 BuildRequires:  python3
 %endif
+
 BuildRequires:  gcc-c++
 BuildRequires:  which
 Requires:       java-11-openjdk-devel
@@ -36,6 +40,7 @@ Correct, reproducible, and fast builds for everyone.
 %if 0%{?rhel} > 6 && 0%{?rhel} < 8
 export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --host_force_python=PY2"
 %else
+export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --host_force_python=PY3"
 %endif
 
 %ifarch aarch64
@@ -66,6 +71,9 @@ export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --host_javabase=@local_jdk//:jdk --
 
 
 %changelog
+* Tue Jun 18 2019 Vincent Batts <vbatts@fedoraproject.org> 0.27.0-3
+- python3 workaround for fedora's
+
 * Mon Jun 17 2019 Vincent Batts <vbatts@fedoraproject.org> 0.27.0-2
 - python3 everywhere
 
