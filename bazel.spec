@@ -1,9 +1,9 @@
-# they warn against doing this ... :-\
+# they warn against fetching source ... but it's so convenient :-\
 
 %define _disable_source_fetch 0
 
 Name:           bazel
-Version:        0.26.0
+Version:        0.27.0
 Release:        2%{?dist}
 Summary:        Correct, reproducible, and fast builds for everyone.
 License:        Apache License 2.0
@@ -13,10 +13,10 @@ Source0:        https://github.com/bazelbuild/bazel/releases/download/%{version}
 BuildRequires:  java-11-openjdk-devel
 BuildRequires:  zlib-devel
 BuildRequires:  pkgconfig(bash-completion)
-%if 0%{?rhel} > 7
-BuildRequires:  python3
-%else
+%if 0%{?rhel} > 6 && 0%{?rhel} < 8
 BuildRequires:  python
+%else
+BuildRequires:  python3
 %endif
 BuildRequires:  gcc-c++
 BuildRequires:  which
@@ -33,8 +33,8 @@ Correct, reproducible, and fast builds for everyone.
 %setup -q -c -n %{name}-%{version}
 
 %build
-%if 0%{?rhel} > 7
-export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --python3_path=/usr/bin/python3"
+%if 0%{?rhel} > 6 && 0%{?rhel} < 8
+export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --host_force_python=PY2"
 %else
 %endif
 
@@ -66,7 +66,13 @@ export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --host_javabase=@local_jdk//:jdk --
 
 
 %changelog
-* Tue Jun 11 2019 Vincent Batts <vbatts@fedoraproject.org> 0.26.0
+* Mon Jun 17 2019 Vincent Batts <vbatts@fedoraproject.org> 0.27.0-2
+- python3 everywhere
+
+* Mon Jun 17 2019 Vincent Batts <vbatts@fedoraproject.org> 0.27.0-1
+- update to 0.27.0
+
+* Tue Jun 11 2019 Vincent Batts <vbatts@fedoraproject.org> 0.26.0-2
 - update to 0.26.0
 
 * Fri May 24 2019 Vincent Batts <vbatts@fedoraproject.org> 0.25.3-2
