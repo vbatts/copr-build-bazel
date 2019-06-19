@@ -4,7 +4,7 @@
 
 Name:           bazel
 Version:        0.27.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Correct, reproducible, and fast builds for everyone.
 License:        Apache License 2.0
 URL:            http://bazel.io/
@@ -13,11 +13,11 @@ Source0:        https://github.com/bazelbuild/bazel/releases/download/%{version}
 BuildRequires:  java-11-openjdk-devel
 BuildRequires:  zlib-devel
 BuildRequires:  pkgconfig(bash-completion)
+BuildRequires:  findutils
 
-# messy, but `python` needs to exist, although python3 is preferred and somewhat detected
-# https://github.com/bazelbuild/bazel/issues/8665
-BuildRequires:  python
+# only for centos7/rhel7. rhel8 has `python3`.
 %if 0%{?rhel} > 6 && 0%{?rhel} < 8
+BuildRequires:  python
 %else
 BuildRequires:  python3
 %endif
@@ -40,7 +40,15 @@ Correct, reproducible, and fast builds for everyone.
 %if 0%{?rhel} > 6 && 0%{?rhel} < 8
 export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --host_force_python=PY2"
 %else
-export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --host_force_python=PY3"
+# thanks to @aehlig for this tip: https://github.com/bazelbuild/bazel/issues/8665#issuecomment-503575270
+find . -type f -regextype posix-extended -iregex '.*(sh|txt|py|_stub|stub_.*|bazel|get_workspace_status|protobuf_support|_so)' -exec %{__sed} -i -e '1s|^#!/usr/bin/env python$|#!/usr/bin/env python3|' "{}" \;
+export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --python_path=/usr/bin/python3"
+
+# horrible of horribles, just to have `python` in the PATH
+# https://github.com/bazelbuild/bazel/issues/8665
+%{__mkdir_p} ./bin-hack
+%{__ln_s} /usr/bin/python3 ./bin-hack/python
+export PATH=$(pwd)/bin-hack:$PATH
 %endif
 
 %ifarch aarch64
@@ -71,6 +79,9 @@ export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --host_javabase=@local_jdk//:jdk --
 
 
 %changelog
+* Wed Jun 19 2019 Vincent Batts <vbatts@fedoraproject.org> 0.27.0-4
+- python3 workaround again, but for rhel8-beta as well
+
 * Tue Jun 18 2019 Vincent Batts <vbatts@fedoraproject.org> 0.27.0-3
 - python3 workaround for fedora's
 
