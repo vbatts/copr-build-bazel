@@ -14,14 +14,14 @@ ifneq ($(USER),root)
 SUDO = sudo
 endif
 
-default: srpm
+default: rpm
 
 all: rpm srpm
 
 name:
 	@echo $(NVR)
 
-rpm:
+rpm: .deps .builddep
 	rpmbuild \
                 --define '_sourcedir $(pwd)' \
                 --define '_specdir $(pwd)' \
@@ -53,7 +53,7 @@ else
 	$(SUDO) dnf install -y 'dnf-command(builddep)' rpm-build && touch $@
 endif
 
-.builddep: $(NVR).src.rpm
+.builddep: $(specname)
 ifeq ($(RELEASE_ID),centos)
 	$(SUDO) yum-builddep -y $< && touch $@
 else
