@@ -20,6 +20,9 @@ all: rpm srpm
 
 name:
 	@echo $(NVR)
+	@echo "  NAME: $(NAME)"
+	@echo "  VERSION: $(VERSION)"
+	@echo "  RELEASE: $(RELEASE)"
 
 rpm: .deps .builddep
 	rpmbuild \
@@ -64,5 +67,5 @@ rebuild: .deps .builddep
 	rpmbuild --rebuild $(NVR).src.rpm
 
 clean:
-	rm -rf *~ *.rpm noarch .builddep .deps
+	rm -rf *~ *.rpm noarch .builddep .deps $(shell uname -m)/ $(NAME)-$(VERSION)/
 
