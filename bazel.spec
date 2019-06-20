@@ -4,7 +4,7 @@
 
 Name:           bazel
 Version:        0.27.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Correct, reproducible, and fast builds for everyone.
 License:        Apache License 2.0
 URL:            http://bazel.io/
@@ -56,6 +56,10 @@ export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --nokeep_state_after_build --notrac
 %else
 %endif
 
+# loose epoch from their release date
+export SOURCE_DATE_EPOCH="$(date -d $(head -1 CHANGELOG.md | %{__grep} -Eo '\b[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}\b' ) +%s)"
+export EMBED_LABEL="%{version}"
+
 export CC=gcc
 export CXX=g++
 export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --host_javabase=@local_jdk//:jdk --verbose_failures"
@@ -79,6 +83,9 @@ export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --host_javabase=@local_jdk//:jdk --
 
 
 %changelog
+* Thu Jun 20 2019 Vincent Batts <vbatts@fedoraproject.org> 0.27.0-5
+- fixing the version output
+
 * Wed Jun 19 2019 Vincent Batts <vbatts@fedoraproject.org> 0.27.0-4
 - python3 workaround again, but for rhel8-beta as well
 
