@@ -14,11 +14,14 @@ Source0:        https://github.com/bazelbuild/bazel/releases/download/%{version}
 Patch0:         https://patch-diff.githubusercontent.com/raw/grpc/grpc/pull/18950.patch
 
 BuildRequires:  java-11-openjdk-devel
+#BuildRequires:  java-1_8_0-openjdk-headless ## OpenSUSE
+#BuildRequires:  java-1.8.0-openjdk-headless ## Mageia
 BuildRequires:  zlib-devel
 BuildRequires:  pkgconfig(bash-completion)
 BuildRequires:  findutils
 BuildRequires:  gcc-c++
 BuildRequires:  which
+BuildRequires:  zip
 
 # only for centos7/rhel7. rhel8 has `python3`.
 %if 0%{?rhel} > 6 && 0%{?rhel} < 8
@@ -28,6 +31,8 @@ BuildRequires:  python3
 %endif
 
 Requires:       java-11-openjdk-devel
+#Requires:       java-1_8_0-openjdk-headless ## OpenSUSE
+#Requires:       java-1.8.0-openjdk-headless ## Mageia
 
 %define bashcompdir %(pkg-config --variable=completionsdir bash-completion 2>/dev/null)
 %global debug_package %{nil}
