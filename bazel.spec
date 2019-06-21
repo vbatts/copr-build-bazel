@@ -4,16 +4,21 @@
 
 Name:           bazel
 Version:        0.27.0
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Correct, reproducible, and fast builds for everyone.
 License:        Apache License 2.0
 URL:            http://bazel.io/
 Source0:        https://github.com/bazelbuild/bazel/releases/download/%{version}/%{name}-%{version}-dist.zip
 
+# remove once https://github.com/bazelbuild/bazel/issues/8666 (https://github.com/grpc/grpc/pull/18950) is resolved
+Patch0:         https://patch-diff.githubusercontent.com/raw/grpc/grpc/pull/18950.patch
+
 BuildRequires:  java-11-openjdk-devel
 BuildRequires:  zlib-devel
 BuildRequires:  pkgconfig(bash-completion)
 BuildRequires:  findutils
+BuildRequires:  gcc-c++
+BuildRequires:  which
 
 # only for centos7/rhel7. rhel8 has `python3`.
 %if 0%{?rhel} > 6 && 0%{?rhel} < 8
@@ -22,8 +27,6 @@ BuildRequires:  python
 BuildRequires:  python3
 %endif
 
-BuildRequires:  gcc-c++
-BuildRequires:  which
 Requires:       java-11-openjdk-devel
 
 %define bashcompdir %(pkg-config --variable=completionsdir bash-completion 2>/dev/null)
@@ -35,6 +38,10 @@ Correct, reproducible, and fast builds for everyone.
 
 %prep
 %setup -q -c -n %{name}-%{version}
+
+pushd third_party/grpc/
+%patch0 -p0
+popd
 
 %build
 %if 0%{?rhel} > 6 && 0%{?rhel} < 8
@@ -85,6 +92,9 @@ export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --host_javabase=@local_jdk//:jdk --
 
 
 %changelog
+* Fri Jun 21 2019 Vincent Batts <vbatts@fedoraproject.org> 0.27.0-7
+- carry patch for grpc fix due to newest glibc
+
 * Thu Jun 20 2019 Kelvin Lu <kelvinlu@squareup.com> 0.27.0-6
 - rename the real bazel binary as `bazel-real` and install the bash wrapper
   (`scripts/packages/bazel.sh`) in its place
