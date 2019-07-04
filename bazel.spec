@@ -3,8 +3,8 @@
 %define _disable_source_fetch 0
 
 Name:           bazel
-Version:        0.27.0
-Release:        7%{?dist}
+Version:        0.27.1
+Release:        0%{?dist}
 Summary:        Correct, reproducible, and fast builds for everyone.
 License:        Apache License 2.0
 URL:            http://bazel.io/
@@ -97,6 +97,9 @@ export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --host_javabase=@local_jdk//:jdk --
 
 
 %changelog
+* Thu Jul 04 2019 Vincent Batts <vbatts@fedoraproject.org> 0.27.1-0
+- update to 0.27.1
+
 * Fri Jun 21 2019 Vincent Batts <vbatts@fedoraproject.org> 0.27.0-7
 - carry patch for grpc fix due to newest glibc
 
