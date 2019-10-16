@@ -1,0 +1,11 @@
+--- src/java_tools/buildjar/java/com/google/devtools/build/buildjar/javac/plugins/dependency/StrictJavaDepsPlugin.java.orig	2019-10-16 13:05:10.252727691 +0000
++++ src/java_tools/buildjar/java/com/google/devtools/build/buildjar/javac/plugins/dependency/StrictJavaDepsPlugin.java	2019-10-16 13:05:17.957900302 +0000
+@@ -179,7 +179,7 @@ public final class StrictJavaDepsPlugin
+             log.error(diagnostic.pos(), Errors.ProcMessager(diagnostic.message()));
+             break;
+           case WARN:
+-            log.warning(diagnostic.pos(), Warnings.ProcMessager(diagnostic.message()));
++            //log.warning(diagnostic.pos(), Warnings.ProcMessager(diagnostic.message()));
+             break;
+           case OFF: // continue below
+         }

@@ -4,7 +4,7 @@
 
 Name:           bazel
 Version:        1.0.0
-Release:        0%{?dist}
+Release:        1%{?dist}
 Summary:        Correct, reproducible, and fast builds for everyone.
 License:        Apache License 2.0
 URL:            http://bazel.io/
@@ -12,6 +12,8 @@ Source0:        https://github.com/bazelbuild/bazel/releases/download/%{version}
 
 # remove once https://github.com/bazelbuild/bazel/issues/8666 (https://github.com/grpc/grpc/pull/18950) is resolved
 Patch0:         https://patch-diff.githubusercontent.com/raw/grpc/grpc/pull/18950.patch
+# FIXME: Java 11 log.warning generates backtrace
+Patch1:         bazel-1.0.0-log-warning.patch
 
 BuildRequires:  java-11-openjdk-devel
 #BuildRequires:  java-1_8_0-openjdk-headless ## OpenSUSE
@@ -21,6 +23,7 @@ BuildRequires:  pkgconfig(bash-completion)
 BuildRequires:  findutils
 BuildRequires:  gcc-c++
 BuildRequires:  which
+BuildRequires:  unzip
 BuildRequires:  zip
 
 # only for centos7/rhel7. rhel8 has `python3`.
@@ -47,6 +50,8 @@ Correct, reproducible, and fast builds for everyone.
 pushd third_party/grpc/
 %patch0 -p0
 popd
+%patch1 -p0
+
 
 %build
 %if 0%{?rhel} > 6 && 0%{?rhel} < 8
@@ -68,16 +73,26 @@ export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --nokeep_state_after_build --notrac
 %else
 %endif
 
+%ifarch s390x
+# increase heap size to addess s390x build failures
+export BAZEL_JAVAC_OPTS="-J-Xmx4g -J-Xms512m"
+%else
+%endif
+
 # loose epoch from their release date
 export SOURCE_DATE_EPOCH="$(date -d $(head -1 CHANGELOG.md | %{__grep} -Eo '\b[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}\b' ) +%s)"
 export EMBED_LABEL="%{version}"
 
+# for debugging's sake
+which g++
+g++ --version
+
 export CC=gcc
 export CXX=g++
 export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --host_javabase=@local_jdk//:jdk --verbose_failures"
-./compile.sh
-./output/bazel build ${EXTRA_BAZEL_ARGS} //scripts:bazel-complete.bash
-./output/bazel shutdown
+env ./compile.sh
+env ./output/bazel build ${EXTRA_BAZEL_ARGS} //scripts:bazel-complete.bash
+env ./output/bazel shutdown
 
 %install
 %{__mkdir_p} %{buildroot}/%{_bindir}
@@ -97,6 +112,9 @@ export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --host_javabase=@local_jdk//:jdk --
 
 
 %changelog
+* Wed Oct 16 2019 Vincent Batts <vbatts@fedoraproject.org> 1.0.0-1
+- reconcile changes for multiarch
+
 * Thu Oct 10 2019 Vincent Batts <vbatts@fedoraproject.org> 1.0.0-0
 - update to 1.0.0
 
