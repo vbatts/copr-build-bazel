@@ -1,10 +1,10 @@
 pkgname		:= bazel
-specname	?= $(pkgname).spec
-pwd		:= $(shell pwd)
-NAME		:= $(shell rpmspec -q --qf "%{name}" $(specname))
-VERSION		:= $(shell rpmspec -q --qf "%{version}" $(specname))
-RELEASE		:= $(shell rpmspec -q --qf "%{release}" $(specname))
-NVR		:= $(NAME)-$(VERSION)-$(RELEASE)
+spec		?= $(pkgname).spec
+pwd			:= $(shell pwd)
+NAME		:= $(shell rpmspec -q --qf "%{name}" $(spec))
+VERSION		:= $(shell rpmspec -q --qf "%{version}" $(spec))
+RELEASE		:= $(shell rpmspec -q --qf "%{release}" $(spec))
+NVR			:= $(NAME)-$(VERSION)-$(RELEASE)
 outdir		?= $(pwd)
 
 RELEASE_ID = $(shell grep '^ID=' /etc/*release | cut -d = -f 2 | tr -d \")
@@ -31,7 +31,7 @@ rpm: .deps.$(RELEASE_ID) .builddep.$(RELEASE_ID)
                 --define '_builddir $(pwd)' \
                 --define '_srcrpmdir $(outdir)' \
                 --define '_rpmdir $(outdir)' \
-                -bb ./$(specname)
+                -bb ./$(spec)
 
 srpm: $(NVR).src.rpm
 
@@ -39,7 +39,7 @@ srpm: $(NVR).src.rpm
 copr: $(NVR).src.rpm
 	copr-cli build bazel $(NVR).src.rpm
 
-$(NVR).src.rpm: .deps.$(RELEASE_ID) $(specname) $(wildcard *.diff)
+$(NVR).src.rpm: .deps.$(RELEASE_ID) $(spec) $(wildcard *.diff)
 	rpmbuild \
                 --define '_sourcedir $(pwd)' \
                 --define '_specdir $(pwd)' \
@@ -47,7 +47,7 @@ $(NVR).src.rpm: .deps.$(RELEASE_ID) $(specname) $(wildcard *.diff)
                 --define '_srcrpmdir $(outdir)' \
                 --define '_rpmdir $(outdir)' \
                 --nodeps \
-                -bs ./$(specname)
+                -bs ./$(spec)
 
 .deps.$(RELEASE_ID):
 ifeq ($(RELEASE_ID),centos)
@@ -56,7 +56,7 @@ else
 	$(SUDO) dnf install -y 'dnf-command(builddep)' rpm-build && touch $@
 endif
 
-.builddep.$(RELEASE_ID): $(specname)
+.builddep.$(RELEASE_ID): $(spec)
 ifeq ($(RELEASE_ID),centos)
 	$(SUDO) yum-builddep -y $< && touch $@
 else
