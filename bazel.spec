@@ -3,7 +3,7 @@
 %define _disable_source_fetch 0
 
 Name:           bazel
-Version:        1.0.0
+Version:        1.1.0
 Release:        1%{?dist}
 Summary:        Correct, reproducible, and fast builds for everyone.
 License:        Apache License 2.0
@@ -87,11 +87,14 @@ export EMBED_LABEL="%{version}"
 which g++
 g++ --version
 
+export TMPDIR=%{_tmppath}
 export CC=gcc
 export CXX=g++
-export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --host_javabase=@local_jdk//:jdk --verbose_failures"
+export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --sandbox_debug --host_javabase=@local_jdk//:jdk --verbose_failures"
 env ./compile.sh
+%ifnarch ppc64le
 env ./output/bazel build ${EXTRA_BAZEL_ARGS} //scripts:bazel-complete.bash
+%endif
 env ./output/bazel shutdown
 
 %install
@@ -99,7 +102,9 @@ env ./output/bazel shutdown
 %{__mkdir_p} %{buildroot}/%{bashcompdir}
 %{__cp} output/bazel %{buildroot}/%{_bindir}/bazel-real
 %{__cp} ./scripts/packages/bazel.sh %{buildroot}/%{_bindir}/bazel
+%ifnarch ppc64le
 %{__cp} ./bazel-bin/scripts/bazel-complete.bash %{buildroot}/%{bashcompdir}/bazel
+%endif
 
 %clean
 %{__rm} -rf %{buildroot}
@@ -108,10 +113,15 @@ env ./output/bazel shutdown
 %defattr(-,root,root)
 %attr(0755,root,root) %{_bindir}/bazel
 %attr(0755,root,root) %{_bindir}/bazel-real
+%ifnarch ppc64le
 %attr(0755,root,root) %{bashcompdir}/bazel
+%endif
 
 
 %changelog
+* Mon Oct 21 2019 Vincent Batts <vbatts@fedoraproject.org> 1.1.0-1
+- update to 1.1.0
+
 * Wed Oct 16 2019 Vincent Batts <vbatts@fedoraproject.org> 1.0.0-1
 - reconcile changes for multiarch
 
