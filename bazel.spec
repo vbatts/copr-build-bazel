@@ -3,7 +3,7 @@
 %define _disable_source_fetch 0
 
 Name:           bazel
-Version:        1.2.1
+Version:        2.0.0
 Release:        1%{?dist}
 Summary:        Correct, reproducible, and fast builds for everyone.
 License:        Apache License 2.0
@@ -119,6 +119,9 @@ env ./output/bazel shutdown
 
 
 %changelog
+* Thu Jan 9 2020 Kaoru Kohashigawa <dev@kaoruk.com> 2.0.0-1
+- update to 2.0.0
+
 * Tue Nov 26 2019 Vincent Batts <vbatts@fedoraproject.org> 1.2.1-1
 - update to 1.2.1
 
