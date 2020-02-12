@@ -2,16 +2,14 @@
 
 %define _disable_source_fetch 0
 
-Name:           bazel
-Version:        1.2.1
+Name:           bazel2
+Version:        2.0.0
 Release:        1%{?dist}
 Summary:        Correct, reproducible, and fast builds for everyone.
 License:        Apache License 2.0
 URL:            http://bazel.io/
-Source0:        https://github.com/bazelbuild/bazel/releases/download/%{version}/%{name}-%{version}-dist.zip
+Source0:        https://github.com/bazelbuild/bazel/releases/download/%{version}/bazel-%{version}-dist.zip
 
-# remove once https://github.com/bazelbuild/bazel/issues/8666 (https://github.com/grpc/grpc/pull/18950) is resolved
-Patch0:         https://patch-diff.githubusercontent.com/raw/grpc/grpc/pull/18950.patch
 # FIXME: Java 11 log.warning generates backtrace
 Patch1:         bazel-1.0.0-log-warning.patch
 
@@ -45,11 +43,8 @@ Requires:       java-11-openjdk-devel
 Correct, reproducible, and fast builds for everyone.
 
 %prep
-%setup -q -c -n %{name}-%{version}
+%setup -q -c -n bazel-%{version}
 
-pushd third_party/grpc/
-%patch0 -p0
-popd
 %patch1 -p0
 
 
@@ -119,6 +114,9 @@ env ./output/bazel shutdown
 
 
 %changelog
+* Thu Dec 19 2019 Vincent Batts <vbatts@fedoraproject.org> 2.0.0-1
+- update to 2.0.0
+
 * Tue Nov 26 2019 Vincent Batts <vbatts@fedoraproject.org> 1.2.1-1
 - update to 1.2.1
 
