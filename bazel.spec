@@ -4,7 +4,7 @@
 
 Name:           bazel2
 Version:        2.1.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Correct, reproducible, and fast builds for everyone.
 License:        Apache License 2.0
 URL:            http://bazel.io/
@@ -14,7 +14,7 @@ Source0:        https://github.com/bazelbuild/bazel/releases/download/%{version}
 Patch1:         bazel-1.0.0-log-warning.patch
 
 # for folks with 'bazel' v1 package installed
-Obsoletes:      bazel
+Conflicts:      bazel
 
 BuildRequires:  java-11-openjdk-devel
 #BuildRequires:  java-1_8_0-openjdk-headless ## OpenSUSE
