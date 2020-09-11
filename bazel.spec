@@ -4,7 +4,7 @@
 
 Name:           bazel3
 Version:        3.5.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Correct, reproducible, and fast builds for everyone.
 License:        Apache License 2.0
 URL:            http://bazel.io/
@@ -12,6 +12,7 @@ Source0:        https://github.com/bazelbuild/bazel/releases/download/%{version}
 
 # FIXME: Java 11 log.warning generates backtrace
 Patch1:         bazel-1.0.0-log-warning.patch
+Patch2:         https://github.com/bazelbuild/bazel/commit/b3ac8f60973ba60d578ae6a653cdd993a2d206d7.patch
 
 # for folks with 'bazel' v1 package installed
 Conflicts:      bazel
@@ -50,6 +51,7 @@ Correct, reproducible, and fast builds for everyone.
 %setup -q -c -n bazel-%{version}
 
 %patch1 -p0
+%patch2 -p1
 
 
 %build
