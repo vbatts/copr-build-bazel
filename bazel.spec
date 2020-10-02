@@ -3,8 +3,8 @@
 %define _disable_source_fetch 0
 
 Name:           bazel3
-Version:        3.5.0
-Release:        3%{?dist}
+Version:        3.5.1
+Release:        0%{?dist}
 Summary:        Correct, reproducible, and fast builds for everyone.
 License:        Apache License 2.0
 URL:            http://bazel.io/
