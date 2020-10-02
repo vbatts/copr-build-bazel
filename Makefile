@@ -18,6 +18,9 @@ default: rpm
 
 all: rpm srpm
 
+version:
+	@echo "v$(VERSION)-$(RELEASE)"
+
 name:
 	@echo $(NVR)
 	@echo "  NAME: $(NAME)"
