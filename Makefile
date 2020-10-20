@@ -55,8 +55,18 @@ $(NVR).src.rpm: .deps.$(RELEASE_ID) $(spec) $(wildcard *.diff)
 .deps.$(RELEASE_ID):
 ifeq ($(RELEASE_ID),centos)
 	$(SUDO) yum install -y yum-utils rpm-build && touch $@
-else
+endif
+ifeq ($(RELEASE_ID),pop)
 	$(SUDO) dnf install -y 'dnf-command(builddep)' rpm-build && touch $@
+endif
+ifeq ($(RELEASE_ID),pop)
+	$(SUDO) apt install -y 'rpm' && touch $@
+endif
+ifeq ($(RELEASE_ID),debian)
+	$(SUDO) apt install -y 'rpm' && touch $@
+endif
+ifeq ($(RELEASE_ID),ubuntu)
+	$(SUDO) apt install -y 'rpm' && touch $@
 endif
 
 .builddep.$(RELEASE_ID): $(spec)
