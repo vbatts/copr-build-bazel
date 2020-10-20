@@ -52,6 +52,15 @@ $(NVR).src.rpm: .deps.$(RELEASE_ID) $(spec) $(wildcard *.diff)
                 --nodeps \
                 -bs ./$(spec)
 
+.container: bazel.spec Makefile
+	docker build -t bazel-build-v$(VERSION)-$(RELEASE) . && touch $@
+
+.container.rebuild: .container
+	docker run -it --rm -v $(HOME)/.config/copr:/root/.config/copr:ro bazel-build-v$(VERSION)-$(RELEASE) make rebuild && touch $@
+
+.container.copr: .container
+	docker run -it --rm -v $(HOME)/.config/copr:/root/.config/copr:ro bazel-build-v$(VERSION)-$(RELEASE) make copr && touch $@
+
 .deps.$(RELEASE_ID):
 ifeq ($(RELEASE_ID),centos)
 	$(SUDO) yum install -y yum-utils rpm-build && touch $@
@@ -80,5 +89,5 @@ rebuild: .deps.$(RELEASE_ID) .builddep.$(RELEASE_ID) $(NVR).src.rpm
 	rpmbuild --rebuild $(NVR).src.rpm
 
 clean:
-	rm -rf *~ *.rpm noarch .builddep.$(RELEASE_ID) .deps.$(RELEASE_ID) $(shell uname -m)/ $(NAME)-$(VERSION)/
+	rm -rf *~ *.rpm noarch .builddep.$(RELEASE_ID) .deps.$(RELEASE_ID) $(shell uname -m)/ $(NAME)-$(VERSION)/ .container*
 
