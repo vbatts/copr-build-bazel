@@ -38,6 +38,9 @@ rpm: .deps.$(RELEASE_ID) .builddep.$(RELEASE_ID)
 
 srpm: $(NVR).src.rpm
 
+new-version: $(spec)
+	sed -ie 's/^Version:.*$$/Version:        $(VERSION)/g' $(spec)
+
 # https://developer.fedoraproject.org/deployment/copr/copr-cli.html
 copr: $(NVR).src.rpm
 	copr-cli build bazel $(NVR).src.rpm
