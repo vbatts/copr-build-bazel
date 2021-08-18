@@ -13,6 +13,9 @@ Source0:        https://github.com/bazelbuild/bazel/releases/download/%{version}
 # FIXME: Java 11 log.warning generates backtrace
 Patch1:         bazel-1.0.0-log-warning.patch
 
+# FIXME: around bazel-4.1.0 https://github.com/bazelbuild/bazel/pull/13534/files
+Patch2:         13534.patch
+
 # for folks with 'bazel' v1 package installed
 Conflicts:      bazel
 Conflicts:      bazel2
@@ -50,7 +53,7 @@ Correct, reproducible, and fast builds for everyone.
 %setup -q -c -n bazel-%{version}
 
 %patch1 -p0
-
+%patch2 -p1
 
 %build
 %if 0%{?rhel} > 6 && 0%{?rhel} < 8

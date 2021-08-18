@@ -58,6 +58,10 @@ $(NVR).src.rpm: .deps.$(RELEASE_ID) $(spec) $(wildcard *.diff)
 .container: bazel.spec Makefile
 	docker build -t bazel-build-v$(VERSION)-$(RELEASE) . && touch $@
 
+PHONY: .container.run
+.container.run: .container
+	docker run -it --rm -v $(HOME)/.config/copr:/root/.config/copr:ro bazel-build-v$(VERSION)-$(RELEASE) bash -l
+
 .container.rebuild: .container
 	docker run -it --rm -v $(HOME)/.config/copr:/root/.config/copr:ro bazel-build-v$(VERSION)-$(RELEASE) make rebuild && touch $@
 
