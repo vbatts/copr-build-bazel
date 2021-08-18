@@ -3,7 +3,7 @@
 %define _disable_source_fetch 0
 
 Name:           bazel4
-Version:        4.0.0
+Version:        4.1.0
 Release:        0%{?dist}
 Summary:        Correct, reproducible, and fast builds for everyone.
 License:        Apache License 2.0
