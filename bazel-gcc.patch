@@ -1,0 +1,22 @@
+--- ./third_party/ijar/mapped_file_unix.cc.orig	2021-09-01 00:46:12.255510754 +0300
++++ ./third_party/ijar/mapped_file_unix.cc	2021-09-01 00:46:47.039243899 +0300
+@@ -18,6 +18,8 @@
+ #include <unistd.h>
+ #include <sys/mman.h>
+ 
++#include <stdexcept>
++#include <limits>
+ #include <algorithm>
+ 
+ #include "third_party/ijar/mapped_file.h"
+--- third_party/ijar/zlib_client.h.orig	2021-09-01 00:53:22.196194178 +0300
++++ third_party/ijar/zlib_client.h	2021-09-01 00:52:20.869668731 +0300
+@@ -15,6 +15,8 @@
+ #ifndef THIRD_PARTY_IJAR_ZLIB_CLIENT_H_
+ #define THIRD_PARTY_IJAR_ZLIB_CLIENT_H_
+ 
++#include <stdexcept>
++#include <limits>
+ #include <limits.h>
+ 
+ #include "third_party/ijar/common.h"

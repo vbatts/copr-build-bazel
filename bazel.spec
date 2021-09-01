@@ -3,7 +3,7 @@
 %define _disable_source_fetch 0
 
 Name:           bazel4
-Version:        4.1.0
+Version:        4.2.1
 Release:        0%{?dist}
 Summary:        Correct, reproducible, and fast builds for everyone.
 License:        Apache License 2.0
@@ -12,9 +12,7 @@ Source0:        https://github.com/bazelbuild/bazel/releases/download/%{version}
 
 # FIXME: Java 11 log.warning generates backtrace
 Patch1:         bazel-1.0.0-log-warning.patch
-
-# FIXME: around bazel-4.1.0 https://github.com/bazelbuild/bazel/pull/13534/files
-Patch2:         13534.patch
+Patch2:         bazel-gcc.patch
 
 # for folks with 'bazel' v1 package installed
 Conflicts:      bazel
@@ -51,9 +49,8 @@ Correct, reproducible, and fast builds for everyone.
 
 %prep
 %setup -q -c -n bazel-%{version}
-
 %patch1 -p0
-%patch2 -p1
+%patch2 -p0
 
 %build
 %if 0%{?rhel} > 6 && 0%{?rhel} < 8
@@ -92,21 +89,20 @@ g++ --version
 export TMPDIR=%{_tmppath}
 export CC=gcc
 export CXX=g++
-export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --sandbox_debug --host_javabase=@local_jdk//:jdk --verbose_failures"
-env ./compile.sh
-%ifnarch ppc64le
-env ./output/bazel build ${EXTRA_BAZEL_ARGS} //scripts:bazel-complete.bash
+export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --sandbox_debug --host_javabase=@local_jdk//:jdk --verbose_failures --subcommands --explain=build.log --show_result=2147483647"
+%if 0%{?fedora} >= 34
+export CXXFLAGS="-include /usr/include/c++/11/limits -include /usr/include/c++/11/functional"
+export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --cxxopt=-include/usr/include/c++/11/limits"
 %endif
-env ./output/bazel shutdown
+env ./compile.sh
+env ./scripts/generate_bash_completion.sh --bazel=output/bazel --output=output/bazel-complete.bash
 
 %install
 %{__mkdir_p} %{buildroot}/%{_bindir}
 %{__mkdir_p} %{buildroot}/%{bashcompdir}
 %{__cp} output/bazel %{buildroot}/%{_bindir}/bazel-real
 %{__cp} ./scripts/packages/bazel.sh %{buildroot}/%{_bindir}/bazel
-%ifnarch ppc64le
-%{__cp} ./bazel-bin/scripts/bazel-complete.bash %{buildroot}/%{bashcompdir}/bazel
-%endif
+%{__cp} output/bazel-complete.bash %{buildroot}/%{bashcompdir}/bazel
 
 %clean
 %{__rm} -rf %{buildroot}
@@ -115,9 +111,6 @@ env ./output/bazel shutdown
 %defattr(-,root,root)
 %attr(0755,root,root) %{_bindir}/bazel
 %attr(0755,root,root) %{_bindir}/bazel-real
-%ifnarch ppc64le
 %attr(0755,root,root) %{bashcompdir}/bazel
-%endif
-
 
 %changelog
