@@ -1,9 +1,9 @@
 pkgname		:= bazel
 spec		?= $(pkgname).spec
 pwd			:= $(shell pwd)
-NAME		:= $(shell rpmspec -q --qf "%{name}" $(spec))
-VERSION		:= $(shell rpmspec -q --qf "%{version}" $(spec))
-RELEASE		:= $(shell rpmspec -q --qf "%{release}" $(spec))
+NAME		:= $(shell rpmspec -q --qf "%{name}" $(spec) || grep '^Name:' ./bazel.spec | awk '{ print $$2 }')
+VERSION		:= $(shell rpmspec -q --qf "%{version}" $(spec) || grep '^Version:' ./bazel.spec | awk '{ print $$2 }')
+RELEASE		:= $(shell rpmspec -q --qf "%{release}" $(spec) || echo 0)
 NVR			:= $(NAME)-$(VERSION)-$(RELEASE)
 outdir		?= $(pwd)
 
