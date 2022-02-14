@@ -2,8 +2,8 @@
 
 %define _disable_source_fetch 0
 
-Name:           bazel4
-Version:        4.2.1
+Name:           bazel5
+Version:        5.0.0
 Release:        0%{?dist}
 Summary:        Correct, reproducible, and fast builds for everyone.
 License:        Apache License 2.0
@@ -12,11 +12,14 @@ Source0:        https://github.com/bazelbuild/bazel/releases/download/%{version}
 
 # FIXME: Java 11 log.warning generates backtrace
 Patch1:         bazel-1.0.0-log-warning.patch
-Patch2:         bazel-gcc.patch
 
 # for folks with 'bazel' v1 package installed
 Conflicts:      bazel
 Conflicts:      bazel2
+Conflicts:      bazel3
+Conflicts:      bazel4
+
+Provides:	bazel
 
 BuildRequires:  java-11-openjdk-devel
 #BuildRequires:  java-1_8_0-openjdk-headless ## OpenSUSE
@@ -50,7 +53,6 @@ Correct, reproducible, and fast builds for everyone.
 %prep
 %setup -q -c -n bazel-%{version}
 %patch1 -p0
-%patch2 -p0
 
 %build
 %if 0%{?rhel} > 6 && 0%{?rhel} < 8

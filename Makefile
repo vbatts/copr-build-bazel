@@ -1,10 +1,10 @@
 pkgname		:= bazel
 spec		?= $(pkgname).spec
-pwd			:= $(shell pwd)
+pwd		:= $(shell pwd)
 NAME		:= $(shell rpmspec -q --qf "%{name}" $(spec) || grep '^Name:' ./bazel.spec | awk '{ print $$2 }')
 VERSION		:= $(shell rpmspec -q --qf "%{version}" $(spec) || grep '^Version:' ./bazel.spec | awk '{ print $$2 }')
 RELEASE		:= $(shell rpmspec -q --qf "%{release}" $(spec) || echo 0)
-NVR			:= $(NAME)-$(VERSION)-$(RELEASE)
+NVR		:= $(NAME)-$(VERSION)-$(RELEASE)
 outdir		?= $(pwd)
 
 RELEASE_ID = $(shell grep '^ID=' /etc/*release | cut -d = -f 2 | tr -d \")
@@ -55,18 +55,30 @@ $(NVR).src.rpm: .deps.$(RELEASE_ID) $(spec) $(wildcard *.diff)
                 --nodeps \
                 -bs ./$(spec)
 
+rpmbuild:
+	mkdir -p $@
+
 .container: bazel.spec Makefile
 	docker build -t bazel-build-v$(VERSION)-$(RELEASE) . && touch $@
 
 PHONY: .container.run
-.container.run: .container
-	docker run -it --rm -v $(HOME)/.config/copr:/root/.config/copr:ro bazel-build-v$(VERSION)-$(RELEASE) bash -l
+.container.run: .container rpmbuild
+	docker run -it --rm \
+		-v $(HOME)/.config/copr:/root/.config/copr:ro \
+		-v $(pwd)/rpmbuild:/root/rpmbuild \
+		bazel-build-v$(VERSION)-$(RELEASE) bash -l
 
-.container.rebuild: .container
-	docker run -it --rm -v $(HOME)/.config/copr:/root/.config/copr:ro bazel-build-v$(VERSION)-$(RELEASE) make rebuild && touch $@
+.container.rebuild: .container rpmbuild
+	docker run -it --rm \
+		-v $(HOME)/.config/copr:/root/.config/copr:ro \
+		-v $(pwd)/rpmbuild:/root/rpmbuild \
+		bazel-build-v$(VERSION)-$(RELEASE) make rebuild && touch $@
 
-.container.copr: .container
-	docker run -it --rm -v $(HOME)/.config/copr:/root/.config/copr:ro bazel-build-v$(VERSION)-$(RELEASE) make copr && touch $@
+.container.copr: .container rpmbuild
+	docker run -it --rm \
+		-v $(HOME)/.config/copr:/root/.config/copr:ro \
+		-v $(pwd)/rpmbuild:/root/rpmbuild \
+		bazel-build-v$(VERSION)-$(RELEASE) make copr && touch $@
 
 .deps.$(RELEASE_ID):
 ifeq ($(RELEASE_ID),centos)
