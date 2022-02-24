@@ -58,7 +58,7 @@ $(NVR).src.rpm: .deps.$(RELEASE_ID) $(spec) $(wildcard *.diff)
 rpmbuild:
 	mkdir -p $@
 
-.container: bazel.spec Makefile
+.container: bazel.spec Makefile Dockerfile
 	docker build -t bazel-build-v$(VERSION)-$(RELEASE) . && touch $@
 
 PHONY: .container.run
