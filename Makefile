@@ -6,6 +6,7 @@ VERSION		:= $(shell rpmspec -q --qf "%{version}" $(spec) || grep '^Version:' ./b
 RELEASE		:= $(shell rpmspec -q --qf "%{release}" $(spec) || echo 0)
 NVR		:= $(NAME)-$(VERSION)-$(RELEASE)
 outdir		?= $(pwd)
+FED_VER		?= latest
 
 RELEASE_ID = $(shell grep '^ID=' /etc/*release | cut -d = -f 2 | tr -d \")
 SUDO =
@@ -59,7 +60,7 @@ rpmbuild:
 	mkdir -p $@
 
 .container: bazel.spec Makefile Dockerfile
-	docker build -t bazel-build-v$(VERSION)-$(RELEASE) . && touch $@
+	docker build -t bazel-build-v$(VERSION)-$(RELEASE) --build-arg fed_ver=$(FED_VER) . && touch $@
 
 PHONY: .container.run
 .container.run: .container rpmbuild
