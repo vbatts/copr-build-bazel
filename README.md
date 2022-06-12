@@ -3,26 +3,52 @@
 This is the rpm spec for generating rpm and/or src.rpm to build [bazel](https://bazel.build/).
 The resulting builds can be found on https://copr.fedorainfracloud.org/coprs/vbatts/bazel/.
 
-
 ## build it yourself
 
-The `./Makefile` has a couple of convenience targets.
-Notably:
+### Building in a fedora/centos container:
+
+* produce a src.rpm, for use on your own copr, or build system, or even then:
+
+```shell
+make .container.rebuild
+```
+
+* get a bash cli in the target build environment
+
+```shell
+make .container.run
+```
+
+* kick of a build on [copr](https://copr.fedorainfracloud.org/coprs/vbatts/bazel/)
+
+```shell
+make .container.copr
+```
+
+### Building on the target Fedora or Centos Host:
+
+* build the source RPM
 
 ```shell
 make srpm
 ```
 
-Will produce you a src.rpm, for use on your own copr, or build system, or even then:
+* produce a src.rpm, for use on your own copr, or build system, or even then:
 
 ```shell
 rpmbuild --rebuild ...src.rpm
 ```
 
-If you are building local, just:
+* If you are building local, just:
 
 ```shell
 make rpm
+```
+
+* kick of a build on [copr](https://copr.fedorainfracloud.org/coprs/vbatts/bazel/)
+
+```shell
+make copr
 ```
 
 which builds through to the binary rpm.
