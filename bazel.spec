@@ -92,10 +92,6 @@ export TMPDIR=%{_tmppath}
 export CC=gcc
 export CXX=g++
 export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --sandbox_debug --host_javabase=@local_jdk//:jdk --verbose_failures --subcommands --explain=build.log --show_result=2147483647"
-%if 0%{?fedora} >= 34
-export CXXFLAGS="-include /usr/include/c++/11/limits -include /usr/include/c++/11/functional"
-export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --cxxopt=-include/usr/include/c++/11/limits"
-%endif
 env ./compile.sh
 env ./scripts/generate_bash_completion.sh --bazel=output/bazel --output=output/bazel-complete.bash
 
