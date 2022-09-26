@@ -55,6 +55,8 @@ Correct, reproducible, and fast builds for everyone.
 %patch1 -p0
 
 %build
+export PATH=/lib/jvm/java-11-openjdk/bin:$PATH
+
 %if 0%{?rhel} > 6 && 0%{?rhel} < 8
 export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --host_force_python=PY2"
 %else
@@ -87,6 +89,8 @@ export EMBED_LABEL="%{version}"
 # for debugging's sake
 which g++
 g++ --version
+which javac
+javac -version
 
 export TMPDIR=%{_tmppath}
 export CC=gcc
