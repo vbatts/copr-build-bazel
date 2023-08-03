@@ -1,0 +1,22 @@
+name: Makefile CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Run Fedora (just prior version) build in the container
+      run: make container.rebuild FED_VER="$(./.hack/latest-version.sh -1)"
+
+    - name: Run Fedora (latest version) build in the container
+      run: make container.rebuild FED_VER="$(./.hack/latest-version.sh)"
+
