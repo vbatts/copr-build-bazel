@@ -2,8 +2,8 @@
 
 %define _disable_source_fetch 0
 
-Name:           bazel5
-Version:        5.4.0
+Name:           bazel6
+Version:        6.2.1
 Release:        0%{?dist}
 Summary:        Correct, reproducible, and fast builds for everyone.
 License:        Apache License 2.0
@@ -18,6 +18,7 @@ Conflicts:      bazel
 Conflicts:      bazel2
 Conflicts:      bazel3
 Conflicts:      bazel4
+Conflicts:      bazel5
 
 Provides:	bazel
 
@@ -93,6 +94,9 @@ export TMPDIR=%{_tmppath}
 export CC=gcc
 export CXX=g++
 export EXTRA_BAZEL_ARGS="${EXTRA_BAZEL_ARGS} --sandbox_debug --host_javabase=@local_jdk//:jdk --verbose_failures --subcommands --explain=build.log --show_result=2147483647"
+#export BAZEL_CXXOPTS="-std=c++11"
+#export BAZEL_CXXOPTS="-std=c++14"
+#export BAZEL_CXXOPTS="-std=c++0x"
 env ./compile.sh
 env ./scripts/generate_bash_completion.sh --bazel=output/bazel --output=output/bazel-complete.bash
 
