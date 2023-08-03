@@ -59,23 +59,27 @@ $(NVR).src.rpm: .deps.$(RELEASE_ID) $(spec) $(wildcard *.diff)
 rpmbuild:
 	mkdir -p $@
 
-.container: bazel.spec Makefile Dockerfile
+container.$(FED_VER): .container.$(FED_VER)
+.container.$(FED_VER): bazel.spec Makefile Dockerfile
 	docker build -t bazel-build-v$(VERSION)-$(RELEASE) --build-arg fed_ver=$(FED_VER) . && touch $@
 
+container.run: .container.run
 PHONY: .container.run
-.container.run: .container rpmbuild
+.container.run: .container.$(FED_VER) rpmbuild
 	docker run -it --rm \
 		-v $(HOME)/.config/copr:/root/.config/copr:ro \
 		-v $(pwd)/rpmbuild:/root/rpmbuild \
 		bazel-build-v$(VERSION)-$(RELEASE) bash -l
 
-.container.rebuild: .container rpmbuild
+container.rebuild: .container.rebuild
+.container.rebuild: .container.$(FED_VER) rpmbuild
 	docker run -it --rm \
 		-v $(HOME)/.config/copr:/root/.config/copr:ro \
 		-v $(pwd)/rpmbuild:/root/rpmbuild \
 		bazel-build-v$(VERSION)-$(RELEASE) make rebuild && touch $@
 
-.container.copr: .container rpmbuild
+container.copr: .container.copr
+.container.copr: .container.$(FED_VER) rpmbuild
 	docker run -it --rm \
 		-v $(HOME)/.config/copr:/root/.config/copr:ro \
 		-v $(pwd)/rpmbuild:/root/rpmbuild \

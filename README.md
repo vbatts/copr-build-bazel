@@ -10,19 +10,19 @@ The resulting builds can be found on https://copr.fedorainfracloud.org/coprs/vba
 * produce a src.rpm, for use on your own copr, or build system, or even then:
 
 ```shell
-make .container.rebuild
+make container.rebuild
 ```
 
 * get a bash cli in the target build environment
 
 ```shell
-make .container.run
+make container.run
 ```
 
 * kick of a build on [copr](https://copr.fedorainfracloud.org/coprs/vbatts/bazel/)
 
 ```shell
-make .container.copr
+make container.copr
 ```
 
 ### Building on the target Fedora or Centos Host:
