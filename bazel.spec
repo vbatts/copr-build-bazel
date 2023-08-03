@@ -54,7 +54,7 @@ Correct, reproducible, and fast builds for everyone.
 
 %prep
 %setup -q -c -n bazel-%{version}
-%patch1 -p0
+%patch -P 1 -p0
 
 %build
 %if 0%{?rhel} > 6 && 0%{?rhel} < 8
